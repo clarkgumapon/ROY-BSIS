@@ -1,0 +1,74 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts"
+import { motion } from "framer-motion"
+
+import { useExpense, type ExpenseCategory } from "@/context/expense-context"
+import { categoryColors } from "@/lib/mock-api"
+
+export function ExpenseChart() {
+  const { expensesByCategory, settings } = useExpense()
+  const [chartData, setChartData] = useState<{ name: string; value: number }[]>([])
+
+  useEffect(() => {
+    const data = Object.entries(expensesByCategory).map(([category, amount]) => ({
+      name: category,
+      value: amount,
+    }))
+    setChartData(data)
+  }, [expensesByCategory])
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("en-PH", {
+      style: "currency",
+      currency: settings.currency,
+    }).format(value)
+  }
+
+  if (chartData.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-muted-foreground">No expense data available</p>
+      </div>
+    )
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="h-full w-full relative overflow-hidden rounded-lg p-2"
+      whileHover={{ 
+        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+        scale: 1.01,
+        transition: { duration: 0.3 }
+      }}
+    >
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={chartData}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            outerRadius={80}
+            fill="#8884d8"
+            dataKey="value"
+            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+            animationBegin={0}
+            animationDuration={800}
+          >
+            {chartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={categoryColors[entry.name as ExpenseCategory] || "#000000"} />
+            ))}
+          </Pie>
+          <Tooltip formatter={(value: number) => [formatCurrency(value), "Amount"]} />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+    </motion.div>
+  )
+}
+
