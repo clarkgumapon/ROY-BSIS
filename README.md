@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Expense Tracker Application
 
 A full-stack expense tracking application with a modern React frontend and FastAPI backend. This application helps users track, categorize, and visualize their personal expenses.
@@ -161,3 +162,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [Recharts](https://recharts.org/)
 - [Framer Motion](https://www.framer.com/motion/)
 - [Shadcn UI](https://ui.shadcn.com/) 
+=======
+# ROY-BSIS
+>>>>>>> 3aa72fb5e7103bdbaea2ba22434508943a24e84e
